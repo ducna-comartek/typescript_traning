@@ -73,9 +73,6 @@ const v = makeFullName({firstName :'Nguyen', lastName : 'Duc', age : 15})
 console.log(v)
 
 //interface
-
-
-
 interface SearchFunction{
     (source : string, subString : string) : boolean
 }
@@ -106,3 +103,12 @@ console.log(myCollection)
 myCollection.remove(1)
 console.log(myCollection)
 myCollection.add('s2')
+
+console.log('Example Animal : ')
+class Animal{
+    name : string
+    constructor(theName : string){this.name = theName}
+    move(distanceInMeters : number = 0){
+        console.log(`${this.name} moved ${distanceInMeters}m.`)
+    }
+}
