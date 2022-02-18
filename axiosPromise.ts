@@ -19,44 +19,50 @@
 // angelMowersPromise
 //     .then(() => myPaymentPromise.then(res => console.log(res)))
 //     .catch(error => console.log(error))
-const axios = require('axios')
-// const fetch = require('node-fetch')
-const baseApi = 'https://reqres.in/api/users?page=1'
-const userApi = 'https://reqres.in/api/user'
+// const axios = require('axios')
+// // const fetch = require('node-fetch')
+// const baseApi = 'https://jsonplaceholder.typicode.com/users'
+// const getId = async() => {
+//     const res = await axios.get(baseApi)
+//     return res
 
-interface Employee {
-    id: number
-    employee_name: string
-    employee_salary: number
-    employee_age: number
-    profile_image: string
-}
-const fetchAllEmployees = async (url: string): Promise<Employee[]> => {
-    const response = await axios.get(url)
-    const { data } = await response
-    return data
-}
+import { use } from "vue/types/umd"
 
-const fetchEmployee = async (url: string, id: number): Promise<Record<string, string>> => {
-    const response = await axios.get(`${url}/${id}`)
-    const { data } = await response
-    return data
-}
-const generateEmail = (name: string): string => {
-    return `${name.split(' ').join('.')}@company.com`
-}
-
-const runAsyncFunctions = async () => {
-    try {
-        const employees = await fetchAllEmployees(baseApi)
-        Promise.all(
-            employees.map(async user => {
-                const userName = await fetchEmployee(userApi, user.id)
-                const emails = generateEmail(userName.name)
-            })
-        ).then((emails)=>console.log(emails))
-    } catch (error) {
-        console.log(error)
+// }
+class User{
+    id : string
+    greeting : Promise<string>
+    constructor(_id : string){
+        this.id = _id,
+        this.greeting = new Promise((response) =>{
+            setTimeout(()=>{
+                response(`My id is ${_id}`)
+            },1000)
+        })
     }
+    children : User[] = []
 }
-runAsyncFunctions()
+const user1 = new User("u1")
+const user1_1 = new User("u1_1")
+const user1_2 = new User("u1_2")
+user1.children.push(user1_1)
+user1.children.push(user1_2)
+
+const todoFunction =async (user:User) : Promise<string> => {
+    const greeting = await user.greeting
+    const idUser = await Promise.all(user.children.map(async(child)=>{
+    const childUser = await child.children
+        return {
+            id : child.id,
+            greeting : child.greeting
+        }
+    }))
+    return JSON.stringify ({
+        id : idUser,
+        greeting : greeting,    
+    })
+}
+
+todoFunction(user1).then(result =>{
+    console.log(result)
+})

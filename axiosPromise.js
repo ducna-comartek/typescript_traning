@@ -1,3 +1,31 @@
+"use strict";
+// const angelMowersPromise = new Promise<string>((resolve, reject)=>{
+//     setTimeout(()=>{
+//         resolve("Finished")
+//     },10000)
+//     reject("Haven't Finished")
+// })
+// const myPaymentPromise = new Promise<Record<string, number | string>>((resolve, reject) => {
+//     setTimeout(() => {
+//         resolve({
+//             amount: 1000,
+//             note: 'Thank You',
+//         })
+//     }, 100000)
+//     reject({
+//         amount: 0,
+//         note: 'Sorry Lawn was not properly Mowed',
+//     })
+// })
+// angelMowersPromise
+//     .then(() => myPaymentPromise.then(res => console.log(res)))
+//     .catch(error => console.log(error))
+// const axios = require('axios')
+// // const fetch = require('node-fetch')
+// const baseApi = 'https://jsonplaceholder.typicode.com/users'
+// const getId = async() => {
+//     const res = await axios.get(baseApi)
+//     return res
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -34,92 +62,55 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var _this = this;
-// const angelMowersPromise = new Promise<string>((resolve, reject)=>{
-//     setTimeout(()=>{
-//         resolve("Finished")
-//     },10000)
-//     reject("Haven't Finished")
-// })
-// const myPaymentPromise = new Promise<Record<string, number | string>>((resolve, reject) => {
-//     setTimeout(() => {
-//         resolve({
-//             amount: 1000,
-//             note: 'Thank You',
-//         })
-//     }, 100000)
-//     reject({
-//         amount: 0,
-//         note: 'Sorry Lawn was not properly Mowed',
-//     })
-// })
-// angelMowersPromise
-//     .then(() => myPaymentPromise.then(res => console.log(res)))
-//     .catch(error => console.log(error))
-var axios = require('axios');
-// const fetch = require('node-fetch')
-var baseApi = 'https://reqres.in/api/users?page=1';
-var userApi = 'https://reqres.in/api/user';
-var fetchAllEmployees = function (url) { return __awaiter(_this, void 0, void 0, function () {
-    var response, data;
+exports.__esModule = true;
+// }
+var User = /** @class */ (function () {
+    function User(_id) {
+        this.children = [];
+        this.id = _id,
+            this.greeting = new Promise(function (response) {
+                setTimeout(function () {
+                    response("My id is ".concat(_id));
+                }, 1000);
+            });
+    }
+    return User;
+}());
+var user1 = new User("u1");
+var user1_1 = new User("u1_1");
+var user1_2 = new User("u1_2");
+user1.children.push(user1_1);
+user1.children.push(user1_2);
+var todoFunction = function (user) { return __awaiter(void 0, void 0, void 0, function () {
+    var greeting, idUser;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, axios.get(url)];
+            case 0: return [4 /*yield*/, user.greeting];
             case 1:
-                response = _a.sent();
-                return [4 /*yield*/, response];
+                greeting = _a.sent();
+                return [4 /*yield*/, Promise.all(user.children.map(function (child) { return __awaiter(void 0, void 0, void 0, function () {
+                        var childUser;
+                        return __generator(this, function (_a) {
+                            switch (_a.label) {
+                                case 0: return [4 /*yield*/, child.children];
+                                case 1:
+                                    childUser = _a.sent();
+                                    return [2 /*return*/, {
+                                            id: child.id,
+                                            greeting: child.greeting
+                                        }];
+                            }
+                        });
+                    }); }))];
             case 2:
-                data = (_a.sent()).data;
-                return [2 /*return*/, data];
+                idUser = _a.sent();
+                return [2 /*return*/, JSON.stringify({
+                        id: idUser,
+                        greeting: greeting
+                    })];
         }
     });
 }); };
-var fetchEmployee = function (url, id) { return __awaiter(_this, void 0, void 0, function () {
-    var response, data;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, axios.get("".concat(url, "/").concat(id))];
-            case 1:
-                response = _a.sent();
-                return [4 /*yield*/, response];
-            case 2:
-                data = (_a.sent()).data;
-                return [2 /*return*/, data];
-        }
-    });
-}); };
-var generateEmail = function (name) {
-    return "".concat(name.split(' ').join('.'), "@company.com");
-};
-var runAsyncFunctions = function () { return __awaiter(_this, void 0, void 0, function () {
-    var employees, error_1;
-    var _this = this;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, fetchAllEmployees(baseApi)];
-            case 1:
-                employees = _a.sent();
-                Promise.all(employees.map(function (user) { return __awaiter(_this, void 0, void 0, function () {
-                    var userName, emails;
-                    return __generator(this, function (_a) {
-                        switch (_a.label) {
-                            case 0: return [4 /*yield*/, fetchEmployee(userApi, user.id)];
-                            case 1:
-                                userName = _a.sent();
-                                emails = generateEmail(userName.name);
-                                return [2 /*return*/, emails];
-                        }
-                    });
-                }); }));
-                return [3 /*break*/, 3];
-            case 2:
-                error_1 = _a.sent();
-                console.log(error_1);
-                return [3 /*break*/, 3];
-            case 3: return [2 /*return*/];
-        }
-    });
-}); };
-runAsyncFunctions();
+todoFunction(user1).then(function (result) {
+    console.log(result);
+});
