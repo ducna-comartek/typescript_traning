@@ -65,12 +65,12 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 exports.__esModule = true;
 // }
 var User = /** @class */ (function () {
-    function User(_id) {
+    function User(_name) {
         this.children = [];
-        this.id = _id,
+        this.name = _name,
             this.greeting = new Promise(function (response) {
                 setTimeout(function () {
-                    response("My id is ".concat(_id));
+                    response("My id is ".concat(_name));
                 }, 1000);
             });
     }
@@ -79,35 +79,33 @@ var User = /** @class */ (function () {
 var user1 = new User("u1");
 var user1_1 = new User("u1_1");
 var user1_2 = new User("u1_2");
+var user1_2_1 = new User("u1_2_1");
+var user1_2_1_1 = new User("u1_2_1_1");
 user1.children.push(user1_1);
 user1.children.push(user1_2);
+user1_2.children.push(user1_2_1);
+user1_2_1.children.push(user1_2_1_1);
 var todoFunction = function (user) { return __awaiter(void 0, void 0, void 0, function () {
-    var greeting, idUser;
+    var greet, listPromise, info, child, result;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, user.greeting];
+            case 0: return [4 /*yield*/, user.greeting.then(function (data) { return data; })];
             case 1:
-                greeting = _a.sent();
-                return [4 /*yield*/, Promise.all(user.children.map(function (child) { return __awaiter(void 0, void 0, void 0, function () {
-                        var childUser;
-                        return __generator(this, function (_a) {
-                            switch (_a.label) {
-                                case 0: return [4 /*yield*/, child.children];
-                                case 1:
-                                    childUser = _a.sent();
-                                    return [2 /*return*/, {
-                                            id: child.id,
-                                            greeting: child.greeting
-                                        }];
-                            }
-                        });
-                    }); }))];
+                greet = _a.sent();
+                listPromise = user.children.map(function (e) {
+                    return todoFunction(e);
+                });
+                return [4 /*yield*/, Promise.all(listPromise)];
             case 2:
-                idUser = _a.sent();
-                return [2 /*return*/, JSON.stringify({
-                        id: idUser,
-                        greeting: greeting
-                    })];
+                info = _a.sent();
+                child = [];
+                info.forEach(function (e) { return child.push(JSON.parse(e)); });
+                result = {
+                    name: user.name,
+                    greet: greet,
+                    children: child
+                };
+                return [2 /*return*/, JSON.stringify(result, null, 2)];
         }
     });
 }); };

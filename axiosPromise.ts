@@ -30,13 +30,13 @@ import { use } from "vue/types/umd"
 
 // }
 class User{
-    id : string
+    name : string
     greeting : Promise<string>
-    constructor(_id : string){
-        this.id = _id,
+    constructor(_name : string){
+        this.name = _name,
         this.greeting = new Promise((response) =>{
             setTimeout(()=>{
-                response(`My id is ${_id}`)
+                response(`My id is ${_name}`)
             },1000)
         })
     }
@@ -45,22 +45,26 @@ class User{
 const user1 = new User("u1")
 const user1_1 = new User("u1_1")
 const user1_2 = new User("u1_2")
+const user1_2_1 = new User("u1_2_1")
+const user1_2_1_1 = new User("u1_2_1_1")
 user1.children.push(user1_1)
 user1.children.push(user1_2)
-
+user1_2.children.push(user1_2_1)
+user1_2_1.children.push(user1_2_1_1)
 const todoFunction =async (user:User) : Promise<string> => {
-    const greeting = await user.greeting
-    const idUser = await Promise.all(user.children.map(async(child)=>{
-    const childUser = await child.children
-        return {
-            id : child.id,
-            greeting : child.greeting
-        }
-    }))
-    return JSON.stringify ({
-        id : idUser,
-        greeting : greeting,    
-    })
+    const greet = await user.greeting.then(data => data);
+    const listPromise = user.children.map(e => {
+        return todoFunction(e)
+    });
+    const info = await Promise.all(listPromise);
+    let child: User[] = [];
+    info.forEach(e => child.push(JSON.parse(e)));
+    const result = {
+        name: user.name,
+        greet: greet,
+        children: child
+    }
+    return JSON.stringify(result, null, 2);
 }
 
 todoFunction(user1).then(result =>{
